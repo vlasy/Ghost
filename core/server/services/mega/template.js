@@ -997,7 +997,7 @@ figure blockquote p {
                                                 <tr>
                                                     <td class="footer-left" valign="middle" align="left">${site.title} &copy; ${date.getFullYear()} – <a href="%recipient.unsubscribe_url%">Unsubscribe</a></td>
                                                     <td class="footer-right" valign="middle" align="right">
-                                                        <a href="https://ghost.org/"><img src="https://static.ghost.org/v3.0.0/images/powered.png" border="0" width="142" height="30" class="gh-powered"></a>
+                                                        <a href="https://ghost.org/"><img src="https://static.ghost.org/v3.0.0/images/powered.png" border="0" width="142" height="30" class="gh-powered" alt="Publish with Ghost"></a>
                                                     </td>
                                                 </tr>
                                             </table>
