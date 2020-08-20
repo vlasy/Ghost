@@ -295,6 +295,58 @@ figure blockquote p {
     padding-bottom: 50px;
 }
 
+
+
+
+/* ----- IF THE BROWSER ----- */
+
+.post-title {
+    padding-bottom: 10px;
+    font-size: 42px;
+    line-height: 1.1em;
+    font-weight: 600;
+}
+
+.post-title-link {
+    color: #15212A;
+    display: block;
+    margin-top: 50px;
+}
+
+.post-meta,
+.view-online {
+    padding-bottom: 50px;
+    white-space: nowrap;
+    color: #738a94;
+    font-size: 13px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+}
+    
+.footer-powered {
+    text-align: center;
+}
+    
+.footer-left {
+    color: #738a94;
+    font-size: 13px;
+    padding-top: 7px;
+    width: 50%;
+}
+    
+.footer-right {
+    white-space: nowrap;
+    font-size: 1px;
+    line-height: 1em;
+}
+
+.gh-powered {
+    width: 142px;
+    height: 30px;
+}
+
+/* ----- ELSE ----- */
+
 .post-title {
     padding-bottom: 10px;
     font-size: 42px;
@@ -320,6 +372,12 @@ figure blockquote p {
     text-transform: uppercase;
     text-align: center;
 }
+
+/* ----- ENDIF THE BROWSER ----- */
+
+
+
+
 
 .view-online {
     text-align: right;
@@ -846,6 +904,10 @@ figure blockquote p {
                         <tr>
                             <td class="wrapper">
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                
+                                
+                                <!-- ***** IF NOT THE BROWSER ***** -->
+                                    
                                     <tr>
                                         <td class="site-info" width="100%" align="center">
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -860,10 +922,32 @@ figure blockquote p {
                                             </table>
                                         </td>
                                     </tr>
+
+                                <!-- ***** ENDIF NOT THE BROWSER ***** --> 
+
+                                    
                                     <tr>
                                         <td class="post-title"><a href="${post.url}" class="post-title-link">${post.title}</a></td>
                                     </tr>
                                     <tr>
+
+                                    
+                                    <!-- ***** IF THE BROWSER ***** -->
+
+                                        <td>
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tr>
+                                                    <td class="post-meta">
+                                                        By ${post.authors} –
+                                                        ${post.published_at} –
+                                                        <a href="${post.url}" class="view-online-link">View online →</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                    <!-- ***** ELSE ***** -->
+                                    
                                         <td align="center">
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                                                 <tr>
@@ -875,6 +959,11 @@ figure blockquote p {
                                                 </tr>
                                             </table>
                                         </td>
+
+                                    <!-- ***** ENDIF THE BROWSER ***** --> 
+
+
+                                            
                                     </tr>
                                     ${post.feature_image ? `
                                     <tr>
@@ -899,7 +988,28 @@ figure blockquote p {
                             <td class="wrapper" align="center">
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
+                                        
+                                    
+                                    <!-- ***** IF THE BROWSER ***** -->
+
+                                        <td class="footer" valign="middle">
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tr>
+                                                    <td class="footer-left" valign="middle" align="left">${site.title} &copy; ${date.getFullYear()} – <a href="%recipient.unsubscribe_url%">Unsubscribe</a></td>
+                                                    <td class="footer-right" valign="middle" align="right">
+                                                        <a href="https://ghost.org/"><img src="https://static.ghost.org/v3.0.0/images/powered.png" border="0" width="142" height="30" class="gh-powered"></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                    <!-- ***** ELSE ***** --> 
+
                                         <td class="footer">${site.title} &copy; ${date.getFullYear()} – <a href="%recipient.unsubscribe_url%">Unsubscribe</a></td>
+
+                                    <!-- ***** ENDIF THE BROWSER ***** --> 
+
+
                                     </tr>
                                 </table>
                             </td>
