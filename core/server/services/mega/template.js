@@ -1,5 +1,5 @@
 /* eslint indent: warn, no-irregular-whitespace: warn */
-module.exports = ({post, site}) => {
+module.exports = ({post, site, templateConfig}) => {
     const date = new Date();
     return `<!doctype html>
 <html>
@@ -821,8 +821,7 @@ figure blockquote p {
 }
 
 
-/* ----- IF THE BROWSER ----- */
-    
+${ templateConfig.showPoweredBy ? `
 .footer-powered {
     text-align: center;
     padding-bottom: 40px;
@@ -832,6 +831,7 @@ figure blockquote p {
     width: 142px;
     height: 30px;
 }
+` : ''}
 
 /* ----- ENDIF THE BROWSER ----- */
 
@@ -862,10 +862,9 @@ figure blockquote p {
                         <tr>
                             <td class="wrapper">
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                
-                                
-                                <!-- ***** IF __NOT__ THE BROWSER ***** -->
-                                    
+
+
+                                    ${ templateConfig.showSiteHeader ? `
                                     <tr>
                                         <td class="site-info" width="100%" align="center">
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -880,10 +879,9 @@ figure blockquote p {
                                             </table>
                                         </td>
                                     </tr>
+                                    ` : ''}
 
-                                <!-- ***** ENDIF __NOT__ THE BROWSER ***** --> 
 
-                                    
                                     <tr>
                                         <td class="post-title"><a href="${post.url}" class="post-title-link">${post.title}</a></td>
                                     </tr>
@@ -926,16 +924,11 @@ figure blockquote p {
                                         <td class="footer">${site.title} &copy; ${date.getFullYear()} – <a href="%recipient.unsubscribe_url%">Unsubscribe</a></td>
                                     </tr>
 
-                                    
-                                    <!-- ***** IF THE BROWSER ***** -->
-
+                                    ${ templateConfig.showPoweredBy ? `
                                     <tr>
                                         <td class="footer-powered"><a href="https://ghost.org/"><img src="https://static.ghost.org/v3.0.0/images/powered.png" border="0" width="142" height="30" class="gh-powered" alt="Publish with Ghost"></a></td>
                                     </tr>
-
-                                    <!-- ***** ENDIF THE BROWSER ***** -->
-
-
+                                    ` : '' }
                                 </table>
                             </td>
                         </tr>
