@@ -18,47 +18,23 @@ const session = {
     add(frame) {
         const object = frame.data;
 
-        if (object.token) {
-            // token auth
-            return models.User.getByEmail('john@example.com').then((user) => {
-                return Promise.resolve((req, res, next) => {
-                    req.brute.reset(function (err) {
-                        if (err) {
-                            return next(err);
-                        }
-                        req.user = user;
-                        auth.session.createSession(req, res, next);
-                    });
-                });
-            }).catch(async (err) => {
-                if (!errors.utils.isIgnitionError(err)) {
-                    throw new errors.UnauthorizedError({
-                        message: i18n.t('errors.middleware.auth.accessDenied'),
-                        err
-                    });
-                }
-
-                if (err.errorType === 'PasswordResetRequiredError') {
-                    await api.authentication.generateResetToken({
-                        passwordreset: [{
-                            email: object.username
-                        }]
-                    }, frame.options.context);
-                }
-
-                throw err;
-            });
-        }
-
-        if (!object || !object.username || !object.password) {
+        const hasCredentials = object && object.username && object.password;
+        const hasToken = object && object.token;
+        if (!hasCredentials && !hasToken) {
             return Promise.reject(new errors.UnauthorizedError({
                 message: i18n.t('errors.middleware.auth.accessDenied')
             }));
         }
+        // TODO: What to do if both credentials and token specified?
 
-        return models.User.check({
-            email: object.username,
-            password: object.password
+        return Promise.resolve().then(() => {
+            if (object.token) {
+                return models.User.getByEmail('john@example.com');
+            }
+            return models.User.check({
+                email: object.username,
+                password: object.password
+            });
         }).then((user) => {
             return Promise.resolve((req, res, next) => {
                 req.brute.reset(function (err) {
