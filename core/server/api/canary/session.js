@@ -11,7 +11,7 @@ const session = {
          * TODO
          * Don't query db for user, when new api http wrapper is in we can
          * have direct access to req.user, we can also get access to some session
-         * inofrmation too and send it back
+         * information too and send it back
          */
         return models.User.findOne({id: frame.options.context.user});
     },
