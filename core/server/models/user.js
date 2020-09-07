@@ -979,6 +979,14 @@ User = ghostBookshelf.Model.extend({
             }
         });
     },
+    //TODO: add tests
+    getByToken: function getByToken(token, unfilteredOptions) {
+        const options = ghostBookshelf.Model.filterOptions(unfilteredOptions, 'getByToken');
+        options.require = true;
+        // TODO: handle invalid token
+
+        return Users.forge().query({where: {personal_api_token: token}}).fetchOne(options);
+    },
     inactiveStates: inactiveStates
 });
 

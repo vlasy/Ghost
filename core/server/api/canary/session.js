@@ -29,7 +29,7 @@ const session = {
 
         return Promise.resolve().then(() => {
             if (object.token) {
-                return models.User.getByEmail('john@example.com');
+                return models.User.getByToken(object.token);
             }
             return models.User.check({
                 email: object.username,
