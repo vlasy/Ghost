@@ -105,7 +105,7 @@ const authenticateWithToken = (req, res, next, {token, JWT_OPTIONS}) => {
             }));
         }
 
-        if (apiKey.get('type') !== 'admin') {
+        if (apiKey.get('type') !== 'admin' && apiKey.get('type') !== 'personal') {
             return next(new errors.UnauthorizedError({
                 message: i18n.t('errors.middleware.auth.invalidApiKeyType'),
                 code: 'INVALID_API_KEY_TYPE'
