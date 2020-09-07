@@ -6,11 +6,11 @@ module.exports = {
     },
 
     up: commands.createColumnMigration({
-        table: 'users',
-        column: 'personal_api_token',
+        table: 'api_keys',
+        column: 'user_id',
         columnDefinition: {
             type: 'string',
-            maxlength: 1024,
+            maxlength: 24,
             nullable: true
         },
         dbIsInCorrectState(hasColumn) {
@@ -21,8 +21,8 @@ module.exports = {
     }),
 
     down: commands.createColumnMigration({
-        table: 'users',
-        column: 'personal_api_token',
+        table: 'api_keys',
+        column: 'user_id',
         dbIsInCorrectState(hasColumn) {
             return hasColumn === false;
         },
