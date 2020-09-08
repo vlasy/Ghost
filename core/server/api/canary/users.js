@@ -73,7 +73,8 @@ module.exports = {
         headers: {},
         options: [
             'id',
-            'include'
+            'include',
+            'keyid'
         ],
         validation: {
             options: {
@@ -89,7 +90,24 @@ module.exports = {
             unsafeAttrs: UNSAFE_ATTRS
         },
         query(frame) {
-            return models.User.edit(frame.data.users[0], frame.options)
+            return Promise.resolve()
+                .then(() => {
+                    if (!frame.options.keyid) {
+                        return;
+                    }
+                    return models.ApiKey.findOne({id: frame.options.keyid})
+                        .then((model) => {
+                            if (!model) {
+                                throw new errors.NotFoundError({
+                                    message: i18n.t('errors.api.resource.resourceNotFound', {
+                                        resource: 'ApiKey'
+                                    })
+                                });
+                            }
+                            return models.ApiKey.refreshSecret(model.toJSON(), Object.assign({}, frame.options, {id: frame.options.keyid}));
+                        });
+                })
+                .then(() => models.User.edit(frame.data.users[0], {...frame.options, withRelated: ['personal_api_key']}))
                 .then((model) => {
                     if (!model) {
                         return Promise.reject(new errors.NotFoundError({
