@@ -337,7 +337,7 @@ module.exports = {
             type: 'string',
             maxlength: 50,
             nullable: false,
-            validations: {isIn: [['content', 'admin']]}
+            validations: {isIn: [['content', 'admin', 'personal']]}
         },
         secret: {
             type: 'string',
