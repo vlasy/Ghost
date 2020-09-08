@@ -5,7 +5,7 @@ const errors = require('@tryghost/errors');
 const dbBackup = require('../../data/db/backup');
 const models = require('../../models');
 const permissionsService = require('../../services/permissions');
-const ALLOWED_INCLUDES = ['count.posts', 'permissions', 'roles', 'roles.permissions'];
+const ALLOWED_INCLUDES = ['count.posts', 'permissions', 'roles', 'roles.permissions', 'personal_api_key'];
 const UNSAFE_ATTRS = ['status', 'roles'];
 
 module.exports = {
