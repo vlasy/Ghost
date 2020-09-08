@@ -18,23 +18,15 @@ const session = {
     add(frame) {
         const object = frame.data;
 
-        const hasCredentials = object && object.username && object.password;
-        const hasToken = object && object.token;
-        if (!hasCredentials && !hasToken) {
+        if (!object || !object.username || !object.password) {
             return Promise.reject(new errors.UnauthorizedError({
                 message: i18n.t('errors.middleware.auth.accessDenied')
             }));
         }
-        // TODO: What to do if both credentials and token specified?
 
-        return Promise.resolve().then(() => {
-            if (object.token) {
-                return models.User.getByToken(object.token);
-            }
-            return models.User.check({
-                email: object.username,
-                password: object.password
-            });
+        return models.User.check({
+            email: object.username,
+            password: object.password
         }).then((user) => {
             return Promise.resolve((req, res, next) => {
                 req.brute.reset(function (err) {
