@@ -67,7 +67,7 @@ const author = (attrs, frame) => {
     delete attrs.locale;
 
     // remove private field
-    if (frame.user.id !== attrs.id) {
+    if (!frame.user || (frame.user && frame.user.id !== attrs.id)) {
         delete attrs.personal_api_key;
     }
 
