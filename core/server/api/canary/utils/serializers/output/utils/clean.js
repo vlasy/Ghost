@@ -66,6 +66,11 @@ const author = (attrs, frame) => {
     delete attrs.visibility;
     delete attrs.locale;
 
+    // remove private field
+    if (frame.user.id !== attrs.id) {
+        delete attrs.personal_api_key;
+    }
+
     return attrs;
 };
 

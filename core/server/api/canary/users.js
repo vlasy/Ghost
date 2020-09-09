@@ -92,7 +92,7 @@ module.exports = {
         query(frame) {
             return Promise.resolve()
                 .then(() => {
-                    if (!frame.options.keyid) {
+                    if (!frame.options.keyid || frame.user.id !== frame.data.users[0].id) { // edit only your own API key
                         return;
                     }
                     return models.ApiKey.findOne({id: frame.options.keyid})
