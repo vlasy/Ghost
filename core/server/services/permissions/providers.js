@@ -59,6 +59,10 @@ module.exports = {
                         message: i18n.t('errors.models.api_key.apiKeyNotFound')
                     });
                 }
+                const foundApiKeyObj = foundApiKey.toJSON();
+                if (foundApiKeyObj.type === 'personal'){
+                    return module.exports.user(foundApiKeyObj.user_id);
+                }
 
                 // api keys have a belongs_to relationship to a role and no individual permissions
                 // so there's no need for permission deduplication

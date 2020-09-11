@@ -436,6 +436,18 @@ DataGenerator.Content = {
             id: ObjectId.generate(),
             type: 'admin',
             integration_id: undefined // "internal"
+        },
+        {
+            id: ObjectId.generate(),
+            type: 'personal',
+            secret: _.repeat('d', 64)
+            // user_id: DataGenerator.Content.users[0].id
+        },
+        {
+            id: ObjectId.generate(),
+            type: 'personal',
+            secret: _.repeat('f', 64)
+            // user_id: DataGenerator.Content.users[2].id
         }
     ],
 
@@ -469,6 +481,8 @@ DataGenerator.Content = {
 DataGenerator.Content.subscribers[0].post_id = DataGenerator.Content.posts[0].id;
 DataGenerator.Content.api_keys[0].integration_id = DataGenerator.Content.integrations[0].id;
 DataGenerator.Content.api_keys[1].integration_id = DataGenerator.Content.integrations[0].id;
+DataGenerator.Content.api_keys[3].user_id = DataGenerator.Content.users[0].id;
+DataGenerator.Content.api_keys[4].user_id = DataGenerator.Content.users[2].id;
 DataGenerator.Content.emails[0].post_id = DataGenerator.Content.posts[0].id;
 DataGenerator.Content.emails[1].post_id = DataGenerator.Content.posts[1].id;
 DataGenerator.Content.members_stripe_customers[0].member_id = DataGenerator.Content.members[2].id;
@@ -927,7 +941,9 @@ DataGenerator.forKnex = (function () {
     const api_keys = [
         createBasic(DataGenerator.Content.api_keys[0]),
         createBasic(DataGenerator.Content.api_keys[1]),
-        createBasic(DataGenerator.Content.api_keys[2])
+        createBasic(DataGenerator.Content.api_keys[2]),
+        createBasic(DataGenerator.Content.api_keys[3]),
+        createBasic(DataGenerator.Content.api_keys[4])
     ];
 
     const emails = [
