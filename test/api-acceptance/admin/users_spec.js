@@ -113,6 +113,32 @@ describe('User API', function () {
             });
     });
 
+    it('Can include user API key for yourself but not for others', function (done) {
+        request.get(localUtils.API.getApiQuery('users/?include=personal_api_key'))
+            .set('Origin', config.get('url'))
+            .expect('Content-Type', /json/)
+            .expect('Cache-Control', testUtils.cacheRules.private)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+
+                should.not.exist(res.headers['x-cache-invalidate']);
+                const jsonResponse = res.body;
+                should.exist(jsonResponse.users);
+                localUtils.API.checkResponse(jsonResponse, 'users');
+
+                jsonResponse.users.should.have.length(4);
+                localUtils.API.checkResponse(jsonResponse.users[0], 'user', ['personal_api_key']);
+                localUtils.API.checkResponse(jsonResponse.users[0].personal_api_key, 'api_key');
+                localUtils.API.checkResponse(jsonResponse.users[1], 'user');
+                localUtils.API.checkResponse(jsonResponse.users[2], 'user');
+                localUtils.API.checkResponse(jsonResponse.users[3], 'user');
+                done();
+            });
+    });
+
     it('Can paginate users', function (done) {
         request.get(localUtils.API.getApiQuery('users/?page=2'))
             .set('Origin', config.get('url'))
@@ -240,6 +266,44 @@ describe('User API', function () {
                     });
             });
     });
+
+    it('can regenerate my personal api key', function (done) {
+        request.get(localUtils.API.getApiQuery('users/me/?include=personal_api_key'))
+            .set('Origin', config.get('url'))
+            .expect(200)
+            .end(function (err, {body}) {
+                should.exist(body.users);
+                localUtils.API.checkResponse(body.users[0], 'user', ['personal_api_key']);
+                localUtils.API.checkResponse(body.users[0].personal_api_key, 'api_key');
+
+                const myApiKey = body.users[0].personal_api_key;
+                request.post(localUtils.API.getApiQuery(`users/1/api_key/${myApiKey.id}/refresh/`))
+                    .set('Origin', config.get('url'))
+                    .send({
+                        users: [{
+                            id: '1'
+                        }]
+                    })
+                    .expect('Content-Type', /json/)
+                    .expect('Cache-Control', testUtils.cacheRules.private)
+                    .expect(200)
+                    .end(function (err, {body: newBody}) {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        should.exist(newBody.users[0]);
+                        localUtils.API.checkResponse(newBody.users[0], 'user', 'personal_api_key');
+                        localUtils.API.checkResponse(newBody.users[0].personal_api_key, 'api_key');
+                        const newApiKey = newBody.users[0].personal_api_key;
+                        should.equal(myApiKey.id, newApiKey.id);
+                        should.notEqual(myApiKey.secret, newApiKey.secret);
+                        done();
+                    });
+            });
+    });
+
+    // it('cannot regenerate other personal api key', function () { }); TODO:
 
     it('Can destroy an active user', function () {
         const userId = testUtils.existingData.users[1].id;

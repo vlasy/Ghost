@@ -112,7 +112,9 @@ const expectedProperties = {
     ,
     email: _(schema.emails)
         .keys(),
-    email_preview: ['html', 'subject', 'plaintext']
+    email_preview: ['html', 'subject', 'plaintext'],
+    api_key: _(schema.api_keys)
+        .keys()
 };
 
 _.each(expectedProperties, (value, key) => {
@@ -160,6 +162,22 @@ module.exports = {
         return jwt.sign(
             {},
             Buffer.from(testUtils.DataGenerator.Content.api_keys[0].secret, 'hex'),
+            JWT_OPTIONS
+        );
+    },
+
+    getValidPersonalToken(id, secret, audience) {
+        const jwt = require('jsonwebtoken');
+        const JWT_OPTIONS = {
+            keyid: id,
+            algorithm: 'HS256',
+            expiresIn: '5m',
+            audience: audience
+        };
+
+        return jwt.sign(
+            {},
+            Buffer.from(secret, 'hex'),
             JWT_OPTIONS
         );
     }
