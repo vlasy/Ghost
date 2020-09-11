@@ -27,6 +27,12 @@ User = ghostBookshelf.Model.extend({
 
     tableName: 'users',
 
+    relationships: ['personal_api_key'],
+
+    relationshipBelongsTo: {
+        personal_api_key: 'api_keys'
+    },
+
     defaults: function defaults() {
         return {
             password: security.identifier.uid(50),
@@ -250,7 +256,7 @@ User = ghostBookshelf.Model.extend({
     },
 
     personal_api_key: function personalApiKey() {
-        return this.hasOne('ApiKey');
+        return this.hasOne('ApiKey', 'user_id', 'id');
     },
 
     hasRole: function hasRole(roleName) {
@@ -280,6 +286,10 @@ User = ghostBookshelf.Model.extend({
         }
 
         return options.context && options.context.public ? null : 'status:[' + allStates.join(',') + ']';
+    },
+
+    permittedAttributes(...args) {
+        return ghostBookshelf.Model.prototype.permittedAttributes.apply(this, args).concat(this.relationships);
     },
 
     /**

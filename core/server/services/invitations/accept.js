@@ -27,13 +27,13 @@ async function accept(invitation) {
         });
     }
 
-    const user = await models.User.add({
+    await models.User.add({
         email: data.email,
         name: data.name,
         password: data.password,
-        roles: [invite.toJSON().role_id]
+        roles: [invite.toJSON().role_id],
+        personal_api_key: {type: 'personal'}
     }, options);
-    await models.ApiKey.add({type: 'personal', user_id: user.id});
 
     return invite.destroy(options);
 }
