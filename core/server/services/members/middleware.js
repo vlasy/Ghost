@@ -71,7 +71,12 @@ const updateMemberData = async function (req, res) {
         const data = _.pick(req.body, 'name', 'subscribed');
         const member = await membersService.ssr.getMemberDataFromSession(req, res);
         if (member) {
-            const updatedMember = await membersService.api.members.update(data, {id: member.id});
+            const options = {
+                id: member.id,
+                withRelated: ['stripeSubscriptions', 'stripeSubscriptions.customer']
+            };
+            const updatedMember = await membersService.api.members.update(data, options);
+
             res.json(formattedMemberResponse(updatedMember.toJSON()));
         } else {
             res.json(null);
@@ -102,7 +107,8 @@ const getMemberSiteData = async function (req, res) {
         portal_plans: settingsCache.get('portal_plans'),
         portal_button_icon: settingsCache.get('portal_button_icon'),
         portal_button_signup_text: settingsCache.get('portal_button_signup_text'),
-        portal_button_style: settingsCache.get('portal_button_style')
+        portal_button_style: settingsCache.get('portal_button_style'),
+        members_support_address: settingsCache.get('members_support_address')
     };
 
     // accent_color is currently an experimental feature
