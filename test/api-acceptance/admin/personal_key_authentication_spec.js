@@ -84,6 +84,8 @@ describe('Personal API key authentication', function () {
             });
     });
 
+    // TODO: can create post when owner! there's a bug
+
     it('Can read users', function () {
         return request
             .get(localUtils.API.getApiQuery('users/'))
