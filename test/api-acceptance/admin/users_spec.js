@@ -222,7 +222,7 @@ describe('User API', function () {
                 should.exist(putBody.users[0]);
                 putBody.users[0].website.should.eql('http://joe-bloggs.ghost.org');
                 putBody.users[0].email.should.eql('jbloggs@example.com');
-                localUtils.API.checkResponse(putBody.users[0], 'user');
+                localUtils.API.checkResponse(putBody.users[0], 'user', 'personal_api_key');
 
                 should.not.exist(putBody.users[0].password);
 
