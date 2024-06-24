@@ -76,6 +76,7 @@ module.exports = function apiRoutes() {
     router.put('/users/owner', mw.authAdminApi, http(apiCanary.users.transferOwnership));
     router.put('/users/:id', mw.authAdminApi, http(apiCanary.users.edit));
     router.del('/users/:id', mw.authAdminApi, http(apiCanary.users.destroy));
+    router.post('/users/:id/api_key/:keyid/refresh', mw.authAdminApi, http(apiCanary.users.edit));
 
     // ## Tags
     router.get('/tags', mw.authAdminApi, http(apiCanary.tags.browse));

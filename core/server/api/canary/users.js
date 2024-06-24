@@ -5,7 +5,7 @@ const errors = require('@tryghost/errors');
 const dbBackup = require('../../data/db/backup');
 const models = require('../../models');
 const permissionsService = require('../../services/permissions');
-const ALLOWED_INCLUDES = ['count.posts', 'permissions', 'roles', 'roles.permissions'];
+const ALLOWED_INCLUDES = ['count.posts', 'permissions', 'roles', 'roles.permissions', 'personal_api_key'];
 const UNSAFE_ATTRS = ['status', 'roles'];
 
 module.exports = {
@@ -73,7 +73,8 @@ module.exports = {
         headers: {},
         options: [
             'id',
-            'include'
+            'include',
+            'keyid'
         ],
         validation: {
             options: {
@@ -89,7 +90,24 @@ module.exports = {
             unsafeAttrs: UNSAFE_ATTRS
         },
         query(frame) {
-            return models.User.edit(frame.data.users[0], frame.options)
+            return Promise.resolve()
+                .then(() => {
+                    if (!frame.options.keyid || frame.user.id !== frame.data.users[0].id) { // edit only your own API key
+                        return;
+                    }
+                    return models.ApiKey.findOne({id: frame.options.keyid})
+                        .then((model) => {
+                            if (!model) {
+                                throw new errors.NotFoundError({
+                                    message: i18n.t('errors.api.resource.resourceNotFound', {
+                                        resource: 'ApiKey'
+                                    })
+                                });
+                            }
+                            return models.ApiKey.refreshSecret(model.toJSON(), Object.assign({}, frame.options, {id: frame.options.keyid}));
+                        });
+                })
+                .then(() => models.User.edit(frame.data.users[0], {...frame.options, withRelated: ['personal_api_key']}))
                 .then((model) => {
                     if (!model) {
                         return Promise.reject(new errors.NotFoundError({

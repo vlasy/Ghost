@@ -31,7 +31,8 @@ async function accept(invitation) {
         email: data.email,
         name: data.name,
         password: data.password,
-        roles: [invite.toJSON().role_id]
+        roles: [invite.toJSON().role_id],
+        personal_api_key: {type: 'personal'}
     }, options);
 
     return invite.destroy(options);

@@ -438,7 +438,8 @@
                     "name": "Ghost",
                     "email": "ghost@example.com",
                     "status": "inactive",
-                    "roles": []
+                    "roles": [],
+                    "personal_api_key": {"type": "personal"}
                 },
                 {
                     "id": "5951f5fca366002ebd5dbef7",
@@ -451,7 +452,8 @@
                     "location": "The Internet",
                     "website": "https://ghost.org",
                     "bio": "You can delete this user to remove all the welcome posts",
-                    "profile_image": "https://static.ghost.org/v3.0.0/images/ghost.png"
+                    "profile_image": "https://static.ghost.org/v3.0.0/images/ghost.png",
+                    "personal_api_key": {"type": "personal"}
                 }
             ]
         },
